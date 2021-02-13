@@ -5,6 +5,9 @@
     "prefer-stable": true,
     "require": {
         "php": ">=7.4",
+        "ext-json": "*",
+        "ext-intl": "*",
+        "ext-mbstring": "*",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "composer/package-versions-deprecated": "1.11.99.1",
