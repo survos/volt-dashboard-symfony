@@ -1,0 +1,90 @@
+{% extends 'voltbase.html.twig' %}
+
+{% block sidebar %}
+
+    {{ block('sidebar_user') }}
+
+    <nav id="sidebarMenu" class="sidebar d-md-block bg-dark text-white collapse" data-simplebar>
+        <div class="sidebar-inner px-4 pt-3">
+            <div class="user-card d-flex d-md- align-items-center justify-content-between justify-content-md-center pb-4">
+                <div class="d-flex align-items-center">
+
+                    <div class="clearfix"></div>
+                    {% if app.user %}
+                        <div class="user-avatar lg-avatar me-4">
+                            <img src="../assets/img/team/profile-picture-3.jpg"
+                                 class="card-img-top rounded-circle border-white" alt="Bonnie Green">
+                        </div>
+                    {% endif %}
+                    <div class="d-block">
+                        {% if app.user %}
+                            <h2 class="h6">Hi, {{ app.user }}</h2>
+                            <a href="{{ path('app_logout') }}"
+                               class="btn btn-secondary text-dark btn-xs"><span class="me-2"><span
+                                            class="fas fa-sign-out-alt"></span></span>Sign Out</a>
+                        {% else %}
+                            <h2 class="h6">Welcome, visitor!</h2>
+                            <a href="{{ path('app_login') }}"
+                               class="btn btn-secondary text-dark btn-xs"><span class="me-2"><span
+                                            class="fas fa-sign-out-alt"></span></span>Sign In/Register</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="collapse-close d-md-">
+                    <a href="#sidebarMenu" class="fas fa-times" data-bs-toggle="collapse" data-bs-target="#sidebarMenu"
+                       aria-controls="sidebarMenu" aria-expanded="true" aria-label="Toggle navigation"></a>
+                </div>
+
+            </div>
+
+            {% block sidebar_nav %}
+                <ul class="nav flex-column pt-3 pt-md-0">
+                    <li class="nav-item">
+                        <a href="{{ path('app_homepage')}}" class="nav-link d-flex align-items-center">
+          <span class="sidebar-icon">
+            <img src="" height="20" width="20" alt="Volt Logo">
+          </span>
+                            <span class="mt-1 ms-1 sidebar-text">Volt Overview</span>
+                        </a>
+                    </li>
+                </ul>
+
+                Additional sidebar menu...
+                {% include '@SurvosBase/render_sidebar_menu.html.twig' with {menuCode: 'survos_sidebar_menu'} %}
+            {% endblock %}
+        </div>
+    </nav>
+{% endblock %}
+
+
+{% block sidebar_user %}
+    USER MENU
+    <nav id="sidebarMenu" class="sidebar d-md-block bg-dark text-white collapse" data-simplebar="init">
+        <div class="simplebar-wrapper" style="margin: 0px;">
+            <div class="simplebar-height-auto-observer-wrapper">
+                <div class="simplebar-height-auto-observer"></div>
+            </div>
+
+            <div class="simplebar-mask">
+                <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
+                    <div class="simplebar-content-wrapper" style="height: auto; overflow: hidden;">
+                        <div class="simplebar-content" style="padding: 0px;">
+                            <div class="sidebar-inner px-4 pt-3">
+                                <div class="user-card d-flex xd-md-none align-items-center justify-content-between justify-content-md-center pb-4">
+                                    <div class="d-flex align-items-center">
+                                    <div class="collapse-close xxd-md-none">
+                                        <a href="#sidebarMenu" class="fas fa-times" data-bs-toggle="collapse"
+                                           data-bs-target="#sidebarMenu" aria-controls="sidebarMenu"
+                                           aria-expanded="true" aria-label="Toggle navigation"></a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+{% endblock %}

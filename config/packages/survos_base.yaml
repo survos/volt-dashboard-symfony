@@ -1,0 +1,10 @@
+#admin_lte:
+#  knp_menu:
+#    enable: true
+#    main_menu: survos_sidebar_menu
+#    breadcrumb_menu: true
+#
+#  routes:
+#    adminlte_welcome: app_homepage
+#    adminlte_login: app_login
+#    adminlte_profile: app_profile

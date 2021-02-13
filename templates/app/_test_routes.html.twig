@@ -1,0 +1,30 @@
+
+
+<h1>Actions</h1>
+<ul>
+    <li>
+        <a href="/pages/components/buttons.html">Generate Buttons</a>
+    </li>
+
+    <li>
+        <a href="/pages/dashboard/dashboard.html">Generate Dashboard</a>
+    </li>
+    <li>
+        <a href="/partials/dashboard/_sidenav.html">Sidebar</a>
+
+    </li>
+    <li>
+        <a href="{{ path('app_legacy_index', {oldRoute: 'partials/dashboard/_sidenav' }) }}">Sidebar via route</a>
+    </li>
+
+    {% for route in ['app_homepage', 'app_buttons', 'app_sidebar', 'app_volt_routes'] %}
+        <a href="{{ path(route) }}" class="btn btn-success">{{ route }}</a>
+    {% endfor %}
+
+    {% for pageRoute in pages|default([]) %}
+        <li>
+                <a href="{{ path('app_legacy_index', {oldRoute: pageRoute }) }}">{{ pageRoute }}</a>
+        </li>
+    {% endfor %}
+
+</ul>

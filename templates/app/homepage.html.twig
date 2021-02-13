@@ -1,0 +1,16 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Hello AppController!{% endblock %}
+
+{% block body %}
+
+    <div class="example-wrapper">
+        {% include "app/_test_routes.html.twig" %}
+
+    This friendly message is coming from:
+    <ul>
+        <li>Your controller at <code><a href="{{ '/home/tac/survos/volt-dashboard-symfony/src/Controller/AppController.php'|file_link(0) }}">src/Controller/AppController.php</a></code></li>
+        <li>Your template at <code><a href="{{ '/home/tac/survos/volt-dashboard-symfony/templates/app/index.html.twig'|file_link(0) }}">templates/app/index.html.twig</a></code></li>
+    </ul>
+</div>
+{% endblock %}
