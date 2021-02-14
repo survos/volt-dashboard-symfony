@@ -8,16 +8,22 @@ require('@popperjs/core');
 require('bootstrap');
 
 require('./styles/app.scss');
+// require('sweetalert');
+//
+// import swal from 'sweetalert2';
+// window.Swal = swal;
+// import smoothScroll from 'smoothscroll';
+// window.SmoothScroll = smoothScroll;
 
-require('./volt/js/volt');
-// import "../../assets/volt/css/volt.css";
+// require('sweetalert');
+// require('./volt/js/volt');
+// import "../../assets/volt/css/volt.css";  // here, or app.scss?
+// import './volt/css/volt.css';
 
 import './styles/app.css';
 
 
-require('sweetalert');
 require('Hinclude/hinclude');
-import './volt/css/volt.css';
 
 // start the Stimulus application
 import './bootstrap';

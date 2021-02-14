@@ -33,6 +33,27 @@ class SidebarMenuSubscriber extends BaseMenuSubscriber implements EventSubscribe
     public function onKnpMenuEvent(KnpMenuEvent $event): void
     {
         $menu = $event->getMenu();
+
+
+
+// https://dashboard.heroku.com/apps/agile-chamber-52782/resources
+        // for nested menus, don't add a route, just a label, then use it for the argument to addMenuItem
+        $nestedMenu = $this->addMenuItem($menu, ['label' => 'Credits']);
+        foreach (['bundles', 'javascript'] as $type) {
+            $this->addMenuItem($nestedMenu, [
+                'route' => 'survos_base_credits', 'rp' => ['type' => $type], 'icon' => $type, 'label' => ucfirst($type)]);
+        }
+
+
+        $this->addMenuItem($menu, ['route' => 'app_homepage']);
+        $this->addMenuItem($menu, ['route' => 'app_menus']);
+        return;
+//        $this->addMenuItem($menu, ['route' => 'app_volt_routes']);
+//        $this->addMenuItem($menu, ['route' => 'app_typography']);
+//        $this->addMenuItem($menu, ['route' => 'app_heroku']);
+//        $this->addMenuItem($menu, ['route' => 'app_buttons']);
+        $this->addMenuItem($menu, ['route' => 'app_sidebar']);
+
         $dir = $this->bag->get('volt_dir') . '/src';
         $finder = new Finder();
         foreach ($finder->files()->name('*.html')->in($dir) as $fileInfo) {
@@ -45,18 +66,6 @@ class SidebarMenuSubscriber extends BaseMenuSubscriber implements EventSubscribe
             $this->addMenuItem($menus[$fileInfo->getRelativePath()], ['route' => 'app_legacy_index', 'label' => $fileInfo->getFilenameWithoutExtension(), 'rp' => ['oldRoute' => $templatePath]]);
         }
 
-        $this->addMenuItem($menu, ['route' => 'app_homepage']);
-        $this->addMenuItem($menu, ['route' => 'app_typography']);
-        $this->addMenuItem($menu, ['route' => 'app_heroku']);
-        $this->addMenuItem($menu, ['route' => 'app_buttons']);
-        $this->addMenuItem($menu, ['route' => 'app_sidebar']);
-// https://dashboard.heroku.com/apps/agile-chamber-52782/resources
-        // for nested menus, don't add a route, just a label, then use it for the argument to addMenuItem
-        $nestedMenu = $this->addMenuItem($menu, ['label' => 'Credits']);
-        foreach (['bundles', 'javascript'] as $type) {
-            $this->addMenuItem($nestedMenu, [
-                'route' => 'survos_base_credits', 'rp' => ['type' => $type], 'label' => ucfirst($type)]);
-        }
 
         // add the login/logout menu items.
         $this->authMenu($this->security, $menu);

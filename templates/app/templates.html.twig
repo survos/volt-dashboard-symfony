@@ -1,0 +1,10 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Templates{% endblock %}
+
+{% block body %}
+    {% for filename, template in templates %}
+        <h3>{{ filename }}</h3>
+        <pre>{{ template.toTwig }}</pre>
+    {% endfor %}
+{% endblock %}

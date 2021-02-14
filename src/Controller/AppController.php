@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Template;
+use App\Services\AppService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,31 +38,6 @@ class AppController extends AbstractController
         ]);
     }
 
-    private function getPages()
-    {
-        $templates = [];
-        $dir = $this->bag->get('volt_dir') . '/src';
-        $finder = new Finder();
-        foreach ($finder->files()->name('*.html')->in($dir) as $fileInfo)
-        {
-//            $templatePath = $this->bag->get('kernel.project_dir') . '/' . str_replace('src', 'templates', $fileInfo->getRelativePath());
-            $templatePath = str_replace('src', '', $fileInfo->getRelativePath() . '/' . $fileInfo->getFilenameWithoutExtension());
-            array_push($templates, $templatePath);
-
-//            dd($templatePath, $fileInfo->getRelativePath(), $fileInfo->getRelativePathname(), $fileInfo->getFilename(), $fileInfo);
-//            if (!is_dir($templatePath)) {
-//                mkdir($templatePath, 0777, true);
-//            }
-//            $templateRealPath = $templatePath . '/' . $fileInfo->getFilename() . '.twig';
-//            if (!file_exists($templateRealPath)) {
-//                file_put_contents($templateRealPath, $fileInfo->getContents());
-//            }
-//            dd($fileInfo, $fileInfo->getRelativePath(), $fileInfo->getRelativePathname());
-//            $twigFilename = $fileInfo;
-        }
-        return $templates;
-
-    }
 
     /**
      * @Route("/buttons", name="app_buttons")
@@ -71,12 +48,30 @@ class AppController extends AbstractController
     }
 
     /**
+     * @Route("/menus", name="app_menus")
+     */
+    public function menus(): Response
+    {
+        return $this->render('app/menus.html.twig', [
+
+        ]);
+    }
+
+    /**
      * @Route("/volt_routes", name="app_volt_routes")
      */
-    public function volt_routes(): Response
+    public function volt_routes(AppService $appService): Response
     {
-        return $this->render('app/_test_routes.html.twig', [
-            'pages' => $this->getPages()
+        $templates = [];
+        /**
+         * @var SplFileInfo $fileInfo
+         */
+        foreach ($appService->getPages() as $realPath => $fileInfo) {
+            $template = $appService->createTemplate($fileInfo->getContents(), $realPath, false);
+            $templates[$fileInfo->getRelativePath()] = $template;
+        }
+        return $this->render('app/templates.html.twig', [
+            'templates' => $templates,
         ]);
     }
 
@@ -92,7 +87,7 @@ class AppController extends AbstractController
     /**
      * @Route("/{oldRoute}.html", name="app_legacy_index", requirements={"oldRoute"=".+"})
      */
-    public function legacyIndex(Environment $twig, RouterInterface $router, ParameterBagInterface $bag, Request $request, $oldRoute): Response
+    public function legacyIndex(Environment $twig, AppService $appService, RouterInterface $router, ParameterBagInterface $bag, Request $request, $oldRoute): Response
     {
 
         $root = $bag->get('kernel.project_dir') . '/templates';
@@ -109,8 +104,8 @@ class AppController extends AbstractController
 //            dd($oldRoute);
 //        }
 
-        $template = $this->createTemplate($html, $oldRoute);
-        $source = $template->__toTwig();
+        $template = $appService->createTemplate($html, $oldRoute);
+        $source = $template->toTwig();
 
         $templateRelativePath = '/_dynamic/' . dirname($oldRoute);
         $templatePath = $root . $templateRelativePath; // str_replace('src', 'templates', $oldRoute);
@@ -158,90 +153,4 @@ class AppController extends AbstractController
 //        dd($oldRoute);
     }
 
-    private function createTemplate($html, $fn, $debug=false): Template
-    {
-
-        // hack -- list of regexes?
-//        $html = preg_replace('|<header.*?/header>|s', '<h2>header moved to course/layout</h2>', $html);
-//        $html = preg_replace('|<header.*?/header>|s', '', $html);
-//        // per https://getbootstrap.com/docs/4.0/migration/, bump the sizes, since the template uses bs3, not bs4
-////        $html = str_replace(['md','sm'], ['lg', 'md'], $html);
-////        $html = str_replace(['md'], ['lg'], $html);
-//        $html = str_replace(['sm'], ['md'], $html);
-
-
-
-
-        $template = new Template();
-        $crawler = new Crawler($html);
-//        $title = $crawler->filter('title')->text();
-
-
-        // see if this is an individual course
-        $extends = preg_match('/partials/i', $fn) ? null : "layout.html.twig";
-        $template->setExtends($extends);
-
-        foreach (['.content', 'main'] as $selector) {
-            $pageContentNode = $crawler->filter($selector);
-            if ($pageContentNode->count()) {
-                break; //
-            }
-        }
-        if ($pageContentNode->count() == 0) {
-            $template->body = sprintf("%s<hr/>%s", $fn, $html);
-            return $template;
-        }
-
-
-        $nodeValues = $pageContentNode->children()->each(function (Crawler $node, $i) use ($debug) {
-//            $header = $node->children()->first();
-//            $isH2 = $header->nodeName() == 'h2';
-            if ($id = $node->attr('id')) {
-//                if (in_array($id, ['quizz-intro-section'])) {
-////                    $extends = "Course/layout.html.twig";
-//                }
-//                dd($id, $node);
-            } else {
-                $id = "block_" . $i; // $node->text();
-            }
-
-            if ($class = (string)$node->attr('class')) {
-//                $id = str_replace(" ", "-", $class);
-//                return [$class => $node->outerHtml()];
-                if (in_array((string)$class, ['footer', 'top-nav'])) {
-                    return false;
-                }
-            }
-            if ($id) {
-                $content = $node->outerHtml();
-                if ($debug) {
-                    $content .= <<< END
-<h5>${id}</h5>\n
-<code>.${class}</code>\n<hr />\n\n
-END;
-                }
-                return ['id' => str_replace('-', '_', $id), 'content' => $content];
-            }
-//            return $node->outerHtml();
-        });
-
-        $body = "{% block meta_title \"$fn\" %}\n\n";
-        foreach (array_filter($nodeValues) as $idx => $x) {
-            $template->addBlock($blockName = $x['id'], $x['content']);
-            $body .= sprintf("  {{ block('%s') }}\n", $blockName);
-        }
-
-//        dd($nodeValues);
-
-//        $body = join("<hr />", $nodeValues);
-//        dd($nodeValues);
-//        $body = $crawler->filter('#page-wrap')->html();
-        $template->extends = $extends;
-        $template->fn = $fn;
-//        $template->extends = "Course/base.html.twig";
-        $template->body = sprintf("%s<hr/>%s", $fn, $body);
-        return $template;
-//        dd($title);
-
-    }
 }

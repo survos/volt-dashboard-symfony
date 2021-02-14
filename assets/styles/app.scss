@@ -16,14 +16,16 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts/";
 @import '~@fortawesome/fontawesome-free/scss/brands';
 
 
-@import '~daterangepicker/daterangepicker.css';
+//@import '~daterangepicker/daterangepicker.css';
 // @import '~bootstrap-select/dist/css/bootstrap-select.min.css';
 
 // for the sidebar, doesn't belong here...
-.ancestor-active {
+.ancestor-active .active {
     font-weight: bolder;
     border-left-style: dot-dash;
     border-left-color: green;
 }
 
-
+//ul {
+//    list-style-type: none;
+//}

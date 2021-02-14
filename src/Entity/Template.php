@@ -16,7 +16,7 @@ class Template
         $this->blocks[$title] = $content;
     }
 
-    public function __toTwig()
+    public function toTwig()
     {
         if (empty($this->extends)) {
             return $this->body;
@@ -26,10 +26,6 @@ class Template
 {% extends "$this->extends" %}
 
 {% block $this->bodyBlock %}
-<a href="#" class="btn btn-danger">
-publish $this->fn to  ??
-</a>
-
 $this->body
 {% endblock %}
 END;
