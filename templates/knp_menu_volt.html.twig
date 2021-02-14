@@ -1,11 +1,18 @@
 {% extends '@SurvosBase/knp_menu.html.twig' %}
 
+{% block root %}
+    <ul class="list-unstyled">
+        {{ block('list') -}}
+    </ul>
+{% endblock %}
+
 {% block label %}
     {% if options.allow_safe_labels and item.getExtra('safe_label', false) %}{{ item.label|raw }}{% else %}{{ item.label }}{% endif %}
 
 {% endblock %}
 
 {% block list %}
+    <!-- {{ _self }}::list -->
 {#    {{  }}#}
     {% if item.hasChildren and options.depth is not same as(0) and item.displayChildren %}
         {%- set attributes = item.linkAttributes %}
@@ -13,13 +20,12 @@
 {#        {%- set classes = classes|merge(['list xxlist-unstyled']) %}#}
         {%- set attributes = attributes|merge({'class': classes|join(' ')}) %}
         {% import _self as knp_menu %}
-        <div class="nav" role="list" {{ knp_menu.attributes(attributes)  }}>
             {{ block('children') }}
-        </div>
     {% endif %}
 {% endblock %}
 
 {% block collablibleList %}
+    <!-- {{ _self }}::collablibleList -->
     {#    {{ knp_menu.attributes(listAttributes) }} #}
     {% if item.hasChildren and options.depth is not same as(0) and item.displayChildren %}
         {%- set attributes = item.linkAttributes %}
@@ -36,25 +42,24 @@
         {%- set attributes = attributes|merge({'class':  classes|join(' ')}) %}
         {% import _self as knp_menu %}
 
-        {{ item.children|length }}
-        {{ matcher.isAncestor(item) or matcher.isCurrent(item)? 'ai': 'x'}}
-        <div class="multi-level {{ matcher.isAncestor(item) ? 'show' : 'collapsed' }}" role="list"  id="collapse_{{ item.name|u.snake }}" {{ knp_menu.attributes(attributes) }}>
-            <ul class="flex-column nav">
+        <div class="multi-level {{ matcher.isAncestor(item)  or matcher.isCurrent(item) ? 'show' : 'collapse' }}" role="list"  id="collapse_{{ item.name|u.snake }}" {{ knp_menu.attributes(attributes) }}>
+            <ul class="flex-column nav list-unstyled">
                 {% for child in item.children %}
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="{{ child.uri}}">
-                        <span class="sidebar-text">{{ child.label }}</span>
+                <li class="nav-item ">
+                    <a class="nav-link collapsed {{ matcher.isCurrent(child) ? 'active' }}" href="{{ child.uri}}">
+                        <span class="sidebar-text ">{{ child.label }}</span>
                     </a>
                 </li>
                 {% endfor %}
             </ul>
-{#                {{ block('children') }}#}
         </div>
+
     {% endif %}
 {% endblock %}
 
 {# this is the root link of something that can be collapsed #}
 {% block collapsibleItem %}
+
     {% import "knp_menu.html.twig" as macros %}
     {%- set classes = item.linkAttribute('class') is not empty ? [item.linkAttribute('class')] : [] %}
     {%- set classes = classes|merge(['show', 'nav-item',  'justify-content-between', 'd-flex']) %}
@@ -71,6 +76,9 @@
     {#    {%- set attributes = attributes|merge({'data-accordion': 'false'}) %}#}
 {#    {%- set attributes = attributes|merge({'data-bs-accordion': 'false'}) %}#}
 
+
+    <li class="nav-item">
+
     <div
             class="nav-link collapsed d-flex justify-content-between align-items-center"
             data-bs-toggle="collapse" data-bs-target="#collapse_{{ itemSlug }}">
@@ -81,6 +89,7 @@
         <div class="link-arrow"><span class="fas fa-chevron-right"></span></div>
     </div>
     {{ block('collablibleList') }}
+    </li>
 
 {% endblock %}
 
@@ -110,8 +119,10 @@
 {% endblock %}
 
 {% block item %}
+    <!-- {{ _self }}::item -->
+
     {% if item.displayed %}
-        {%- set is_collapsable = item.hasChildren and item.attributes.collapse_type|default(false) %} {# was attributes.collapsable|default(false) %} #}
+        {%- set is_collapsable = item.hasChildren and item.parent  %} {# was attributes.collapsable|default(false) %} #}
         {%- set itemSlug = item.name|u.snake %}
 
         {# building the class of the item #}
@@ -141,13 +152,19 @@
         {%- if classes is not empty %}
             {%- set attributes = attributes|merge({'class': classes|join(' ')}) %}
         {%- endif %}
+
         {# displaying the item #}
         {% import _self as knp_menu %}
-        <li {{ knp_menu.attributes(attributes) }}>
+        {% set attributes = {'class': 'nav-item'} %}
 
         {%- if is_collapsable %}
+            <!-- calling {{ _self }}::collapsibleItem -->
+
             {{ block('collapsibleItem') }}
-        {%- elseif item.uri is not empty and (not matcher.isCurrent(item) or options.currentAsLink) %}
+        {%- else %}
+            <!-- calling {{ _self }}::link|span Element -->
+            <li {{ knp_menu.attributes(attributes) }}>
+            {% if item.uri is not empty and (not matcher.isCurrent(item) or options.currentAsLink) %}
                 {{ block('linkElement') }}
             {%- else %}
                 {{ block('spanElement') }}
@@ -158,7 +175,8 @@
             {%- set childrenClasses = item.childrenAttribute('class') is not empty ? [item.childrenAttribute('class')] : [] %}
             {%- set childrenClasses = childrenClasses|merge(['menu_level_' ~ item.level]) %}
             {%- set listAttributes = item.childrenAttributes|merge({'class': childrenClasses|join(' ') }) %}
-            {{ not is_collapsable ? block('list') }}
-        </li>
+            {{ block('list') }}
+            </li>
+        {%- endif %}
     {% endif %}
 {% endblock %}

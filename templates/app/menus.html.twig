@@ -4,32 +4,39 @@
 {% block title %}menus{% endblock %}
 
 {% block body %}
+    <div class="row">
+        <div class="col-6">
+            <h3>Goal</h3>
+            {% set goal = block('goal') %}
+            {{ goal|raw }}
+            <pre>{{ block('goal')|cleanup|escape }}</pre>
+        </div>
+<div class="col-6">
     {% if menuCode is not defined %}
         {% set menuCode = 'survos_sidebar_menu' %}
     {% endif %}
 
-<nav class="sidebar d-md-block bg-dark text-white collapse">
-    {% set goal = block('goal') %}
+    "template"      : "@SurvosBase/knp_menu.html.twig",
 
     {% set test = knp_menu_render(menuCode, {
         'menu_code'     : menuCode,
-        "template"      : "@SurvosBase/knp_menu.html.twig",
+        "template"      : "knp_menu_volt.html.twig",
         "attributes"    : "mt-2 navbar navbar-dark",
         "currentClass"  : "active",
-        "ancestorClass" : "ancestor-active justify-content-between",
-        "branch_class"  : "nav-item branch justify-content-between",
+        "ancestorClass" : "ancestor-active justify-content-between d-flex",
+        "branch_class"  : "nav-item branch justify-content-between d-flex align-items-center",
         'firstClass'    : '',
         'lastClass'     : '',
         'leaf_class'    : 'nav-item',
         "allow_safe_labels": true,
     }) %}
-    {{ goal|raw }}
-    &nbsp; <br />
-    <hr />
     {{ test|raw }}
+    <nav class="sidebar d-md-block bg-dark text-white collapse">
 </nav>
-    <pre>{{ test|escape('html') }}</pre>
-    <pre>{{ block('goal')|escape }}</pre>
+
+    <pre>{{ test|cleanup|escape('html') }}</pre>
+</div>
+    </div>
 
 {% endblock %}
 
@@ -38,7 +45,7 @@
     <li class="nav-item">
     <div
             class="nav-link collapsed d-flex justify-content-between align-items-center"
-            data-bs-toggle="collapse" data-bs-target="#submenu-pages">
+            data-bs-toggle="collapse" data-bs-target="#test">
         <div>
             <span class="sidebar-icon"><span class="far fa-file-alt"></span></span>
             <span class="sidebar-text">Test Collapse</span>
@@ -49,7 +56,7 @@
 
 
     <div class="multi-level collapse  " role="list"
-         id="submenu-pages" aria-expanded="false">
+         id="test" aria-expanded="false">
         <ul class="flex-column nav">
             <li class="nav-item">
                 <a class="nav-link" href="@@path/pages/examples/sign-in.html">

@@ -8,6 +8,7 @@ require('@popperjs/core');
 require('bootstrap');
 
 require('./styles/app.scss');
+// import './styles/app.css';
 // require('sweetalert');
 //
 // import swal from 'sweetalert2';
@@ -20,7 +21,6 @@ require('./styles/app.scss');
 // import "../../assets/volt/css/volt.css";  // here, or app.scss?
 // import './volt/css/volt.css';
 
-import './styles/app.css';
 
 
 require('Hinclude/hinclude');

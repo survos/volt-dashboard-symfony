@@ -47,7 +47,6 @@ class SidebarMenuSubscriber extends BaseMenuSubscriber implements EventSubscribe
 
         $this->addMenuItem($menu, ['route' => 'app_homepage']);
         $this->addMenuItem($menu, ['route' => 'app_menus']);
-        return;
 //        $this->addMenuItem($menu, ['route' => 'app_volt_routes']);
 //        $this->addMenuItem($menu, ['route' => 'app_typography']);
 //        $this->addMenuItem($menu, ['route' => 'app_heroku']);
