@@ -33,7 +33,7 @@ class AppController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('app/homepage.html.twig', [
+        return $this->render('_dynamic/pages/dashboard/dashboard.html.twig', [
             'controller_name' => 'AppController',
         ]);
     }
@@ -66,6 +66,7 @@ class AppController extends AbstractController
         /**
          * @var SplFileInfo $fileInfo
          */
+        //
         foreach ($appService->getPages() as $realPath => $fileInfo) {
             $template = $appService->createTemplate($fileInfo->getContents(), $realPath, false);
             $templates[$fileInfo->getRelativePath()] = $template;

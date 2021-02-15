@@ -47,23 +47,33 @@ class SidebarMenuSubscriber extends BaseMenuSubscriber implements EventSubscribe
 
         $this->addMenuItem($menu, ['route' => 'app_homepage']);
         $this->addMenuItem($menu, ['route' => 'app_menus']);
-//        $this->addMenuItem($menu, ['route' => 'app_volt_routes']);
-//        $this->addMenuItem($menu, ['route' => 'app_typography']);
-//        $this->addMenuItem($menu, ['route' => 'app_heroku']);
-//        $this->addMenuItem($menu, ['route' => 'app_buttons']);
+        $this->addMenuItem($menu, ['route' => 'app_volt_routes']);
+        $this->addMenuItem($menu, ['route' => 'app_typography']);
+        $this->addMenuItem($menu, ['route' => 'app_heroku']);
+        $this->addMenuItem($menu, ['route' => 'app_buttons']);
         $this->addMenuItem($menu, ['route' => 'app_sidebar']);
 
         $dir = $this->bag->get('volt_dir') . '/src';
         $finder = new Finder();
         foreach ($finder->files()->name('*.html')->in($dir) as $fileInfo) {
             // nested menus
-            if (empty($menus[$fileInfo->getRelativePath()])) {
-                $menus[$fileInfo->getRelativePath()] = $this->addMenuItem($menu, ['label' => $fileInfo->getRelativePath()]);
+            $parentDir = $fileInfo->getRelativePath();
+            $parentMenu = $menus[$parentDir] ?? null;
+            if (empty($parentMenu)) {
+                if ($parentDir == 'pages') {
+
+                }
+                if ($parentDir <> 'pages') {
+                    $menus[$parentDir] = $this->addMenuItem($menu, ['label' => $fileInfo->getRelativePath()]);
+                } else {
+                    $menus[$parentDir] = $menu; // pages go to root.
+                }
             }
             // @todo: nest by directory
             $templatePath = str_replace('src', '', $fileInfo->getRelativePath() . '/' . $fileInfo->getFilenameWithoutExtension());
-            $this->addMenuItem($menus[$fileInfo->getRelativePath()], ['route' => 'app_legacy_index', 'label' => $fileInfo->getFilenameWithoutExtension(), 'rp' => ['oldRoute' => $templatePath]]);
+            $this->addMenuItem($menus[$parentDir], ['route' => 'app_legacy_index', 'label' => $fileInfo->getFilenameWithoutExtension(), 'rp' => ['oldRoute' => $templatePath]]);
         }
+//        dd(array_keys($menus));
 
 
         // add the login/logout menu items.

@@ -124,17 +124,6 @@ END;
 //            $templatePath = $this->bag->get('kernel.project_dir') . '/' . str_replace('src', 'templates', $fileInfo->getRelativePath());
             $templatePath = str_replace('src', '', $fileInfo->getRelativePath() . '/' . $fileInfo->getFilenameWithoutExtension());
             $templates[$templatePath] = $fileInfo;
-
-//            dd($templatePath, $fileInfo->getRelativePath(), $fileInfo->getRelativePathname(), $fileInfo->getFilename(), $fileInfo);
-//            if (!is_dir($templatePath)) {
-//                mkdir($templatePath, 0777, true);
-//            }
-//            $templateRealPath = $templatePath . '/' . $fileInfo->getFilename() . '.twig';
-//            if (!file_exists($templateRealPath)) {
-//                file_put_contents($templateRealPath, $fileInfo->getContents());
-//            }
-//            dd($fileInfo, $fileInfo->getRelativePath(), $fileInfo->getRelativePathname());
-//            $twigFilename = $fileInfo;
         }
         return $templates;
 

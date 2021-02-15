@@ -6,7 +6,7 @@ survos_base_bundle_oauth:
 
 
 survos_landing: {path: /landing, controller: 'Survos\BaseBundle\Controller\LandingController::landing'}
-app_homepage: {path: /, controller: 'Survos\BaseBundle\Controller\LandingController::landing'}
+#app_homepage: {path: /, controller: 'Survos\BaseBundle\Controller\LandingController::landing'}
 app_heroku: {path: /heroku, controller: 'Survos\BaseBundle\Controller\LandingController::heroku'}
 app_logo: {path: /logo, controller: 'Survos\BaseBundle\Controller\LandingController::logo'}
 app_profile: {path: /profile, controller: 'Survos\BaseBundle\Controller\LandingController::profile'}

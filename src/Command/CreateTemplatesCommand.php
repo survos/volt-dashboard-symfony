@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Services\AppService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -10,6 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 class CreateTemplatesCommand extends Command
 {
@@ -20,18 +22,23 @@ class CreateTemplatesCommand extends Command
      * @var ParameterBagInterface
      */
     private ParameterBagInterface $bag;
+    /**
+     * @var AppService
+     */
+    private AppService $appService;
 
     /**
      * CreateTemplatesCommand constructor.
      */
 
-    public function __construct(ParameterBagInterface $bag)
+    public function __construct(ParameterBagInterface $bag, AppService $appService)
     {
         parent::__construct();
         $this->root = $bag->get('kernel.project_dir');
 
 
         $this->bag = $bag;
+        $this->appService = $appService;
     }
 
 
@@ -47,6 +54,14 @@ class CreateTemplatesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
+        /**
+         * @var SplFileInfo $fileInfo
+         */
+        foreach ($this->appService->getPages() as $page => $fileInfo)
+        {
+            $template = $this->appService->createTemplate($fileInfo->getContents(), $fileInfo->getRealPath());
+        }
         $dir = $this->bag->get('volt_dir');
         $finder = new Finder();
         foreach ($finder->files()->name('*.html')->in($dir) as $fileInfo)
