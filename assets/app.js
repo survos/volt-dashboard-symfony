@@ -1,13 +1,8 @@
 // make sure $ and jquery are global
 require('@popperjs/core');
-
-// const $ = require('jquery');
-// global.jQuery = global.$ = $;
-// require('popper.js');
-// require('admin-lte'); // This comes from yarn add admin-lte (not the admin-lte bundle, which includes bootstrap).
 require('bootstrap');
-
 require('./styles/app.scss');
+
 // import './styles/app.css';
 // require('sweetalert');
 //
