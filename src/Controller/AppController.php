@@ -31,9 +31,10 @@ class AppController extends AbstractController
      * @Route("/", name="app_homepage")
      * @Route("/welcome", name="adminlte_welcome")
      */
-    public function index(): Response
+    public function homepage(): Response
     {
-        return $this->render('_dynamic/pages/dashboard/dashboard.html.twig', [
+        return $this->render('app/homepage.html.twig', [
+//        return $this->render('_dynamic/pages/dashboard/dashboard.html.twig', [
             'controller_name' => 'AppController',
         ]);
     }

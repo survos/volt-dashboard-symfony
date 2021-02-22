@@ -17,7 +17,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.8",
         "gajus/dindent": "^2.0",
-        "knplabs/knp-markdown-bundle": "^1.8",
+        "knplabs/knp-markdown-bundle": "dev-master",
         "knplabs/knp-menu-bundle": "^3.1",
         "phpdocumentor/reflection-docblock": "^5.2",
         "sensio/framework-extra-bundle": "^5.1",
@@ -106,6 +106,10 @@
         }
     },
     "repositories": {
+        "survos_markdown_bundle": {
+            "type": "vcs",
+            "url": "git@github.com:survos/KnpMarkdownBundle.git"
+        },
         "git-survosbase": {
             "type": "vcs",
             "url": "https://github.com/survos/BaseBundle.git"
