@@ -1,56 +1,25 @@
-<!--
+{% extends "layout.html.twig" %}
 
-=========================================================
-* Volt - Bootstrap 5 Admin Dashboard
-=========================================================
+{% block body %}
+{% block meta_title "/home/tac/survos/projects/volt-bootstrap-5-dashboard/src/pages/upgrade-to-pro.html" %}
 
-* Product Page: https://themesberg.com/product/admin-dashboard/volt-bootstrap-5-dashboard
-* Copyright 2020 Themesberg (https://www.themesberg.com)
+  {{ block('block_0') }}
+  {{ block('block_1') }}
 
-* Designed and coded by https://themesberg.com
+{% endblock %}
 
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. Please contact us to request a removal.
-
--->
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    @@include('./_head.html', {
-        "path": "..",
-        "title": "Volt Bootstrap 5 Dashboard - Upgrade to Pro"
-    })
-</head>
-
-<body>
-
-        <!-- NOTICE: You can use the _analytics.html partial to include production code specific code & trackers -->
-        @@if (environment === 'production') {
-            @@include('./_analytics-body.html')
-        }
-
-        @@include('./dashboard/_nav.html', {
-            "path": ".."
-        })
-
-        <div class="container-fluid bg-soft">
-            <div class="row">
-                <div class="col-12">
-
-                    @@include('./dashboard/_sidenav.html', {
-                        "path": ".."
-                    })
-
-                    <main class="content">
-                        <div class="row justify-content-center pt-5 pb-4">
+{% block block_0 %}
+<div class="row justify-content-center pt-5 pb-4">
                             <div class="col-12 col-xl-8 text-center">
                                 <h1 class="text-center mb-4">Upgrade to PRO <span class="fas fa-rocket ms-2"></span></h1>
                                 <p class="lead">Take front-end development to the next level by upgrading to the PRO version of Volt featuring over 3 times more components, plugin and pages. You also get 6 months of premium support and free updates.</p>        
                             </div>
-                        </div>  
-                        <div class="row justify-content-center pb-4">
+                        </div>
+{% endblock %}
+
+
+{% block block_1 %}
+<div class="row justify-content-center pb-4">
                             <div class="col-12 col-xl-8">
                                 <div class="table-responsive">
                                     <table class="table comparison-table table-striped">
@@ -83,7 +52,7 @@
                                             <td class="border-0"><i class="fa fa-check text-success"></i></td>
                                         </tr>
                                         <tr>
-                                        <td class="rounded-start border-0 option">Kanban Drag & Drop Board</td>
+                                        <td class="rounded-start border-0 option">Kanban Drag &amp; Drop Board</td>
                                         <td class="border-0"><i class="fa fa-times text-danger"></i></td>
                                             <td class="border-0"><i class="fa fa-check text-success"></i></td>
                                         </tr>
@@ -137,16 +106,4 @@
                                 </div>
                             </div>
                         </div>
-
-                    </main>
-                </div>
-            </div>
-        </div>
-
-    @@include('./_scripts.html', {
-        "path": ".."
-    })
-
-</body>
-
-</html>
+{% endblock %}

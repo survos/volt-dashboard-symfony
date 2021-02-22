@@ -47,7 +47,7 @@ class CreateTemplatesCommand extends Command
         $this
             ->setDescription(self::$defaultDescription)
             ->addArgument('dir', InputArgument::OPTIONAL, 'Directory where volt admin template is located', )
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
+            ->addOption('overwrite', null, InputOption::VALUE_NONE, 'Overwrite existing files')
         ;
     }
 
@@ -58,30 +58,24 @@ class CreateTemplatesCommand extends Command
         /**
          * @var SplFileInfo $fileInfo
          */
-        foreach ($this->appService->getPages() as $page => $fileInfo)
-        {
-            $template = $this->appService->createTemplate($fileInfo->getContents(), $fileInfo->getRealPath());
-        }
+
         $dir = $this->bag->get('volt_dir');
         $finder = new Finder();
         foreach ($finder->files()->name('*.html')->in($dir) as $fileInfo)
         {
-
             $templatePath = $this->root . '/' . str_replace('src', 'templates', $fileInfo->getRelativePath());
             if (!is_dir($templatePath)) {
                 $io->warning("Creating " . $templatePath);
                 mkdir($templatePath, 0777, true);
             }
             $templateRealPath = $templatePath . '/' . $fileInfo->getFilename() . '.twig';
-            if (!file_exists($templateRealPath)) {
-                file_put_contents($templateRealPath, $fileInfo->getContents());
+            if (!file_exists($templateRealPath) || $input->getOption('overwrite')) {
+                $template = $this->appService->createTemplate($fileInfo->getContents(), $fileInfo->getRealPath());
+                $source = $template->toTwig();
+                file_put_contents($templateRealPath, $source);
+                $io->warning("writing " . $templateRealPath);
+//                dd($source);
             }
-            dd($fileInfo, $fileInfo->getRelativePath(), $fileInfo->getRelativePathname());
-            $twigFilename = $fileInfo;
-        }
-
-        if ($input->getOption('option1')) {
-            // ...
         }
 
         $io->success('Templates have been generated.');

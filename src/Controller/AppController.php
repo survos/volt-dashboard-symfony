@@ -93,6 +93,12 @@ class AppController extends AbstractController
     {
 
         $root = $bag->get('kernel.project_dir') . '/templates';
+        // if the file exists in templates, then just return that.  During development, clear the templates and use the dynamic rendering.
+        // to release, run bin/console app:create-templates, which will populate this directory
+        if (file_exists($root . ($templatePath = "/$oldRoute.html.twig"))) {
+            return $this->render($templatePath, []);
+        }
+
         if (!file_exists($fn = sprintf("%s/src/%s.html", $bag->get('volt_dir'), $oldRoute)))
         {
             dd("Missing " . $fn, $oldRoute);
