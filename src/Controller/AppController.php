@@ -96,10 +96,10 @@ class AppController extends AbstractController
         // if the file exists in templates, then just return that.  During development, clear the templates and use the dynamic rendering.
         // to release, run bin/console app:create-templates, which will populate this directory
         if (file_exists($root . ($templatePath = "/$oldRoute.html.twig"))) {
-            return $this->render($templatePath, []);
+//            return $this->render($templatePath, []);
         }
 
-        if (!file_exists($fn = sprintf("%s/src/%s.html", $bag->get('volt_dir'), $oldRoute)))
+        if (!file_exists($fn = sprintf("%s/src/%s.html", $bag->get('kernel.project_dir') . $bag->get('volt_dir'), $oldRoute)))
         {
             dd("Missing " . $fn, $oldRoute);
         }
@@ -114,12 +114,21 @@ class AppController extends AbstractController
 
         $template = $appService->createTemplate($html, $oldRoute);
         $source = $template->toTwig();
+        $template = $twig->createTemplate($source);
+        $rendered = $template->render(array('name'=>'World'));
+
+        return new Response($rendered);
+        dd($rendered);
+
 
         $templateRelativePath = '/_dynamic/' . dirname($oldRoute);
         $templatePath = $root . $templateRelativePath; // str_replace('src', 'templates', $oldRoute);
         if (!is_dir($templatePath)) {
             mkdir($templatePath, 0777, true);
         }
+
+        // in a production environment, we can't write to a file, so render the template directly.
+
 
         $twigName = $templateRelativePath . '/' . sprintf('%s.html.twig', pathinfo($oldRoute, PATHINFO_FILENAME));
             file_put_contents($root . $twigName, $source);

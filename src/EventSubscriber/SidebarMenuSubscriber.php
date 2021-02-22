@@ -52,7 +52,7 @@ class SidebarMenuSubscriber extends BaseMenuSubscriber implements EventSubscribe
         $this->addMenuItem($menu, ['route' => 'app_buttons']);
         $this->addMenuItem($menu, ['route' => 'app_sidebar']);
 
-        $dir = $this->bag->get('volt_dir') . '/src';
+        $dir = $this->bag->get('kernel.project_dir') . $this->bag->get('volt_dir') . '/src';
         $finder = new Finder();
         foreach ($finder->files()->name('*.html')->in($dir) as $fileInfo) {
             // nested menus
