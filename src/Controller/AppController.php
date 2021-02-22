@@ -104,7 +104,7 @@ class AppController extends AbstractController
             dd("Missing " . $fn, $oldRoute);
         }
         $html = file_get_contents($fn);
-        $route = $router->getRouteCollection()->get($oldRoute);
+//        $route = $router->getRouteCollection()->get($oldRoute);
 //            dd($route);
 //        try {
 //        } catch (\Exception $exception)
